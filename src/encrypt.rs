@@ -1,13 +1,12 @@
-use ndarray::{Array2, s};
+use ndarray::Array2;
 
-use crate::{sub_hcie::SubHCIE, logistic::SecretKey};
+use crate::{sub_hcie::{SubHCIE, Operation}, logistic::SecretKey};
 
 fn gen_fcie(f_hcie: &mut Array2<u8>, f_table: &Array2<u8>, f: &Array2<u8>, sub_hcie: &mut SubHCIE) {
     let m = f_hcie.shape()[0];
     let n = f_hcie.shape()[1];
     let s_m = f_table.shape()[0];
     let s_n = f_table.shape()[1];
-    let b_m = m / s_m;
     let b_n = n / s_n;
     assert!(m % s_m == 0);
     assert!(n % s_n == 0);
@@ -22,7 +21,6 @@ fn gen_fcie(f_hcie: &mut Array2<u8>, f_table: &Array2<u8>, f: &Array2<u8>, sub_h
                 let q = dividend % b_n;
                 for x in 0..s_m {
                     for y in 0..s_n {
-                        assert!(s_n * q + y < n, "s_n = {}, q = {}, y = {}", s_n, q, y);
                         f_sub[[x, y]] = f[[s_m*p + x, s_n * q + y]];
                     }
                 }
@@ -56,11 +54,23 @@ fn pseudoimage(m: usize, n: usize, s_m: usize, s_n: usize) -> Array2<u8> {
 pub fn encrypt(f: &Array2<u8>, s_m: usize, s_n: usize, key: &SecretKey) -> Array2<u8> {
     let m = f.shape()[0];
     let n = f.shape()[1];
-    let mut sub_hcie = SubHCIE::new(key, 100);
+    let mut sub_hcie = SubHCIE::new(key, 100, Operation::Encrypt, 1, 1, 1);
     let mut f_table = pseudoimage(m, n, s_m, s_n);
     sub_hcie.apply(&mut f_table.view_mut());
 
     let mut f_hcie = ndarray::Array::from_elem((m, n), 0);
     gen_fcie(&mut f_hcie, &f_table, f, &mut sub_hcie);
     f_hcie
+}
+
+pub fn decrypt(f_hcie: &Array2<u8>, s_m: usize, s_n: usize, key: &SecretKey) -> Array2<u8> {
+    let m = f_hcie.shape()[0];
+    let n = f_hcie.shape()[1];
+    let mut sub_hcie = SubHCIE::new(key, 100, Operation::Decrypt, 1, 1, 1);
+    let mut f_table = pseudoimage(m, n, s_m, s_n);
+    sub_hcie.apply(&mut f_table.view_mut());
+
+    let mut f = ndarray::Array::from_elem((m, n), 0);
+    gen_fcie(&mut f, &f_table, f_hcie, &mut sub_hcie);
+    f
 }
