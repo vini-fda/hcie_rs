@@ -2,7 +2,7 @@ use ndarray::{ArrayViewMut1, ArrayViewMut2};
 
 /// Rotates the `i`-th row of `f` by `p` positions
 /// in the left or right direction (defined by `b`).
-pub fn rolr(mut f: ArrayViewMut2<u8>, i: usize, p: usize, b: u8) {
+pub fn rolr(f: &mut ArrayViewMut2<u8>, i: usize, p: usize, b: u8) {
     let m = f.shape()[0]; // number of rows
     assert!(i < m);
 
@@ -25,7 +25,7 @@ pub fn rolr(mut f: ArrayViewMut2<u8>, i: usize, p: usize, b: u8) {
 
 /// Rotates the `j`-th column of `f` by `p` positions
 /// in the up or down direction (defined by `b`).
-pub fn roud(mut f: ArrayViewMut2<u8>, j: usize, p: usize, b: u8) {
+pub fn roud(f: &mut ArrayViewMut2<u8>, j: usize, p: usize, b: u8) {
     let n = f.shape()[1];
     assert!(j < n);
 
@@ -41,7 +41,7 @@ pub fn roud(mut f: ArrayViewMut2<u8>, j: usize, p: usize, b: u8) {
 /// Rotates all elements satisfying `i + j == k`,
 /// in the lower left (when b = 0) or upper right (when b = 1) direction,
 /// by `p` positions.
-pub fn rour(mut f: ArrayViewMut2<u8>, k: usize, p: usize, b: u8) {
+pub fn rour(f: &mut ArrayViewMut2<u8>, k: usize, p: usize, b: u8) {
     let m = f.shape()[0];
     let n = f.shape()[1];
     assert!(k <= m + n - 2);
@@ -65,10 +65,10 @@ pub fn rour(mut f: ArrayViewMut2<u8>, k: usize, p: usize, b: u8) {
 /// Rotates all elements satisfying `i - j == l`,
 /// in the upper left (when b = 0) or lower right (when b = 1) direction,
 /// by `p` positions.
-pub fn roul(mut f: ArrayViewMut2<u8>, l: isize, p: usize, b: u8) {
+pub fn roul(f: &mut ArrayViewMut2<u8>, l: isize, p: usize, b: u8) {
     let m = f.shape()[0];
     let n = f.shape()[1];
-    assert!(l >= 1 - n as isize);
+    assert!(l >= 1 - n as isize, "l = {}, n = {}", l, n);
     assert!(l <= (m - 1) as isize);
 
     let g = f.as_slice_memory_order_mut().unwrap();
@@ -91,7 +91,13 @@ where
     T: Copy,
 {
     let n = ptrs.len();
+    let p = p % n;
+    // println!("n = {}, p = {}", n, p);
+
+    
     let p = if b == 0 { p } else { n - p };
+    // if panic, print the following message
+
     let d = gcd(n, p);
 
     for i in 0..d {
