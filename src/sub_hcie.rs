@@ -54,7 +54,7 @@ impl SubHCIE {
             for j in 0..s_n {
                 roud(f, j, p, bit(j + q + s_m));
             }
-            for k in 0..(s_m + s_n - 2) {
+            for k in 0..=(s_m + s_n - 2) {
                 rour(f, k, p, bit(k + q + s_m + s_n));
             }
             for l in (-(s_n as isize) + 1)..=(s_m as isize - 1) {
@@ -90,7 +90,7 @@ impl SubHCIE {
                 let temp = temp + l - 2;
                 roul(f, l, p, bit(temp as usize) ^ 1);
             }
-            for k in (0..(s_m + s_n - 2)).rev() {
+            for k in (0..=(s_m + s_n - 2)).rev() {
                 rour(f, k, p, bit(k + q + s_m + s_n) ^ 1);
             }
             for j in (0..s_n).rev() {
