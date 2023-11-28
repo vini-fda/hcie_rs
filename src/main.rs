@@ -5,23 +5,22 @@ mod logistic;
 mod img_array;
 
 fn main() {
-    // open imgs/peppers.tif
-    let img = img_array::open_grayscale("imgs/peppers.tif");
-    // convert to array
-    let array = img_array::img_to_array(&img);
-
     let secret_key = logistic::SecretKey::new(0.1, 3.9999);
-    // encrypt
-    let encrypted = encrypt::encrypt(&array, 64, 64, &secret_key);
-    // convert to img
-    let encrypted_img = img_array::array_to_img(&encrypted);
-    // save to peppers_encrypted.tif
-    img_array::save_grayscale(&encrypted_img, "peppers_encrypted.png");
-
-    // decryptio
-    let decrypted = encrypt::decrypt(&encrypted, 64, 64, &secret_key);
-    // convert to img
-    let decrypted_img = img_array::array_to_img(&decrypted);
-    // save to peppers_decrypted.tif
-    img_array::save_grayscale(&decrypted_img, "peppers_decrypted.png");
+    
+    // create array with file names
+    let filenames = vec!["baboon", "female", "earth", "house", "peppers", "splash"];
+    let s_m = 32;
+    let s_n = 32;
+    for filename in filenames {
+        // open image
+        let img = img_array::open_grayscale(&format!("imgs_256/{}.png", filename));
+        // convert to array
+        let array = img_array::img_to_array(&img);
+        // encrypt
+        let encrypted = encrypt::encrypt(&array, s_m, s_n, &secret_key);
+        // convert to image
+        let img = img_array::array_to_img(&encrypted);
+        // save image
+        img.save(&format!("imgs_256_encrypted/{}_encrypted.png", filename)).unwrap();
+    }
 }

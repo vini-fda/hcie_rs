@@ -31,11 +31,10 @@ pub fn logistic_bitsequence(key: &SecretKey, n_iter: usize) -> Vec<u8> {
 // and appends them to the binary sequence
 #[inline(always)]
 fn binary_add(b: &mut Vec<u8>, x: f64) {
-    let mut x = x;
+    let mut x = x.fract();
     for _ in 0..8 {
         x *= 2.0;
-        let xfloor = x.floor();
-        b.push(xfloor as u8);
-        x -= xfloor;
+        b.push(x.floor() as u8);
+        x = x.fract();
     }
 }

@@ -19,10 +19,9 @@ pub struct SubHCIE {
 }
 
 impl SubHCIE {
-    pub fn new(key: &SecretKey, n_iter: usize, op: Operation, alpha: usize, beta: usize, gamma: usize) -> Self {
-        let bit_sequence = logistic_bitsequence(key, 100000);
+    pub fn new(key: &SecretKey, n_iter: usize, op: Operation, alpha: usize, beta: usize, gamma: usize, bit_sequence: Vec<u8>, init_offset: usize) -> Self {
         Self {
-            offset: 0,
+            offset: init_offset,
             n_iter,
             bit_sequence,
             op,
@@ -68,6 +67,14 @@ impl SubHCIE {
         self.offset += (3*s_m + 3*s_n - 2) * self.n_iter
     }
 
+    pub fn set_op(&mut self, op: Operation) {
+        self.op = op;
+    }
+
+    pub fn set_offset(&mut self, offset: usize) {
+        self.offset = offset;
+    }
+
     fn decrypt(&mut self, f: &mut ArrayViewMut2<u8>) {
         let s_m = f.shape()[0];
         let s_n = f.shape()[1];
@@ -93,6 +100,6 @@ impl SubHCIE {
                 rolr(f, i, p, bit(i + q) ^ 1);
             }
         }
-        self.offset += (3*s_m + 3*s_n - 2) * self.n_iter
+        self.offset -= (3*s_m + 3*s_n - 2) * self.n_iter
     }
 }
