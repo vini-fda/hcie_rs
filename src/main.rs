@@ -9,12 +9,13 @@ mod encrypt;
 mod logistic;
 mod img_array;
 mod get_permutation_matrix;
+mod mean;
 
 fn main() {
     let secret_key = logistic::SecretKey::new(0.1, 3.9999);
     
     // create array with file names
-    let filenames = vec!["baboon", "female", "earth", "house", "peppers", "splash"];
+    let filenames = ["baboon", "female", "earth", "house", "peppers", "splash"];
     let s_m = 32;
     let s_n = 32;
     let mut original_imgs = vec![];
@@ -36,9 +37,9 @@ fn main() {
     }
     println!("done encrypting");
 
-    // use get_permutation_matrix::get_permutation_matrix;
     for n in 1..=3 {
-        let (w, w_inv) = get_permutation_matrix(&original_imgs[0..1], &encrypted_imgs[0..1]);
+        println!("n = {}", n);
+        let (w, w_inv) = get_permutation_matrix(&original_imgs[0..n], &encrypted_imgs[0..n]);
         // let w_inv = read_matrix_from_txt(256, 256, "w_inv.txt");
 
         // print_matrix_to_txt(&w, "w.txt");

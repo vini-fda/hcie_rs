@@ -1,6 +1,6 @@
-# EET-51 Lab 3: Compressão de Imagens sem Perda de Informação
+# FM-223 Exame: Hierarchical Chaotic Image Encryption Algorithm
 
-Implementação do código de Golomb para compressão de imagens em Rust, bem como levantamento de histogramas, cálculo de entropia e cálculo da taxa de compressão.
+Implementação do algorithmo de criptografia de imagens caótico hierárquico proposto por [Yen, J-C., and J-I. Guo (2000)](https://digital-library.theiet.org/content/journals/10.1049/ip-vis_20000208).
 
 ## Dependências
 
@@ -8,14 +8,4 @@ Implementação do código de Golomb para compressão de imagens em Rust, bem co
 
 ## Execução
 
-Para executar o código, basta executar o comando `cargo run <caminho_da_imagem>` no diretório raiz do projeto.
-
-Por exemplo, para executar o código com a imagem `peppers.tif`:
-
-```bash
-cargo run imgs/peppers.tif
-```
-
-## Análise
-
-Há um Jupyter Notebook no diretório principal do projeto que contém a análise dos resultados obtidos. Para executá-lo, é necessário ter o Jupyter instalado na máquina. Para instalar o Jupyter, siga as [instruções oficiais da ferramenta](https://jupyter.org/install).
+Para executar o código, basta executar o comando `cargo run` no diretório raiz do projeto.
