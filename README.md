@@ -1,6 +1,6 @@
 # FM-223 Exame: Hierarchical Chaotic Image Encryption Algorithm
 
-Implementação do algorithmo de criptografia de imagens caótico hierárquico proposto por [Yen, J-C., and J-I. Guo (2000)](https://digital-library.theiet.org/content/journals/10.1049/ip-vis_20000208).
+Implementação do algoritmo de criptografia de imagens caótico hierárquico proposto por [Yen, J-C., and J-I. Guo (2000)](https://digital-library.theiet.org/content/journals/10.1049/ip-vis_20000208).
 
 ## Dependências
 
